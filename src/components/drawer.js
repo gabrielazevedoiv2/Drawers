@@ -27,7 +27,7 @@ export default class Drawer extends React.Component {
     getResizingPosition = (e) => {
         const xPos = e.layerX;
         const yPos = e.layerY;
-        if (this.isDrawing == true) {
+        if (this.isDrawing === true) {
             this.drawingPosition = {
                 topLeft: (xPos < this.drawingBounds && yPos < this.drawingBounds)?true:false,
                 top: (xPos > this.drawingBounds && yPos < this.drawingBounds && xPos < (this.drawer.clientWidth - this.drawingBounds))?true:false,
@@ -38,21 +38,23 @@ export default class Drawer extends React.Component {
                 bottomLeft: (xPos < this.drawingBounds && yPos > (this.drawer.clientHeight - this.drawingBounds))?true:false,
                 left: (xPos < this.drawingBounds && yPos > this.drawingBounds && yPos < (this.drawer.clientHeight - this.drawingBounds))?true:false,
             }
-            console.log(this.drawingPosition);
         }
         this.isDrawing = false;
     }
 
     resize(e) {
         this.getResizingPosition(e);
+        this.resizeX(e);
     }
 
     resizeX(e) {
-        this.drawer.style.width = ((this.drawer.clientWidth) + (e.pageX - this.drawer.clientWidth)) + 'px';
+        console.log(this.drawer.clientWidth)
+        console.log(e.pageX - this.previousMouseX)
+        this.drawer.style.width = ((this.drawer.clientWidth) + (e.pageX - this.previousMouseX)) + 'px';
     }
 
     resizeY(e) {
-        this.drawer.style.height = ((this.drawer.clientHeight) + (e.pageY - this.drawer.clientHeight)) + 'px';
+        this.drawer.style.height = ((this.drawer.clientHeight) + (e.pageY - this.previousMouseY)) + 'px';
     }
 
     stopResize(drawer) {
@@ -63,6 +65,7 @@ export default class Drawer extends React.Component {
     initResize(e) {
         this.isDrawing = true;
         this.previousMouseY = e.pageY;
+        this.previousMouseX = e.pageX;
         const resizerFunc = ($event) => {this.resize($event)}
         window.addEventListener('mousemove', resizerFunc);
         window.addEventListener('mouseup', function () {
