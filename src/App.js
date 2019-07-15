@@ -5,10 +5,8 @@ import Drawer from './components/drawer';
 function App() {
   return (
     <div className="App">
-      <Drawer color="blue"></Drawer>
-      <div style={{marginLeft: '400px'}}>
-        <Drawer color="red"></Drawer>
-      </div>
+      <Drawer style={{top: 100, left: 100}} color="blue"></Drawer>
+      <Drawer style={{top: 400, left: 400}} color="red"></Drawer>
     </div>
   );
 }

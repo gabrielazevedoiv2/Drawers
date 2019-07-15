@@ -20,6 +20,13 @@ export default class Drawer extends React.Component {
         this.isDrawing = false;
     }
 
+    topLeft(e) {
+        this.resizeY(e, true);
+        this.resizeX(e, true);
+        this.repositionY(e);
+        this.repositionX(e);
+    }
+
     componentDidMount() {
         this.drawer.addEventListener('mousedown', ($event) => this.initResize($event));
     }
@@ -42,19 +49,40 @@ export default class Drawer extends React.Component {
         this.isDrawing = false;
     }
 
+    reduceDrawingPosition() {
+        return Object.entries(this.drawingPosition).find((x, index) => x[1] === true);
+    }
+
     resize(e) {
         this.getResizingPosition(e);
-        this.resizeX(e);
+        const position = this.reduceDrawingPosition();
+        this[position[0]].call(this, e);
     }
 
-    resizeX(e) {
-        console.log(this.drawer.clientWidth)
-        console.log(e.pageX - this.previousMouseX)
-        this.drawer.style.width = ((this.drawer.clientWidth) + (e.pageX - this.previousMouseX)) + 'px';
+    resizeX(e, reversible) {
+        if (reversible) {
+            this.drawer.style.width = ((this.drawer.clientWidth) + (this.drawer.getBoundingClientRect().left - (e.pageX))) + 'px';
+        } else {
+            this.drawer.style.width = ((this.drawer.clientWidth) + (e.pageX - (this.drawer.getBoundingClientRect().x + this.drawer.getBoundingClientRect().width))) + 'px';
+        }        
     }
 
-    resizeY(e) {
-        this.drawer.style.height = ((this.drawer.clientHeight) + (e.pageY - this.previousMouseY)) + 'px';
+    resizeY(e, reversible) {
+        if (reversible) {
+            this.drawer.style.height = ((this.drawer.clientHeight) + (this.drawer.getBoundingClientRect().top - (e.pageY))) + 'px';
+        } else {
+            this.drawer.style.height = ((this.drawer.clientHeight) + (e.pageY - (this.drawer.getBoundingClientRect().y + this.drawer.getBoundingClientRect().height))) + 'px';
+        }      
+    }
+
+    repositionX(e) {
+        const rect = this.drawer.getBoundingClientRect();
+        this.drawer.style.left = (rect.left - (rect.x - e.pageX)) + 'px';
+    }
+
+    repositionY(e) {
+        const rect = this.drawer.getBoundingClientRect();
+        this.drawer.style.top = (rect.top - (rect.y - e.pageY)) + 'px';
     }
 
     stopResize(drawer) {
@@ -76,7 +104,7 @@ export default class Drawer extends React.Component {
 
     render() {
         return (
-            <div style={{backgroundColor: this.props.color, width: 100, height: 100, position: "absolute", opacity: 0.5}} ref={elem => this.drawer = elem}>
+            <div style={{backgroundColor: this.props.color, width: 100, height: 100, position: "absolute", opacity: 0.5, ...this.props.style}} ref={elem => this.drawer = elem}>
             </div>
         )
     }
