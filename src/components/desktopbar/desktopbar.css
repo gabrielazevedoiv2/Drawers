@@ -1,0 +1,23 @@
+.app-bar {
+    height: 40px;
+    background-color: rgba(216, 30, 91, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 14px;
+    font-size: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.left-menu {
+    display: flex;
+}
+.btn {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: white;
+    cursor: pointer;
+}
+.btn:hover {
+    background: rgba(0, 0, 0, 0.2)
+}

@@ -1,5 +1,9 @@
 export default class DrawerResizingController {
+
     static topLeft(drawer, e) {
+        if (drawer.getBoundingClientRect().top < '41' && e.clientY < '41') {
+            return;
+        }
         DrawerResizingController.resizeY(drawer, e, true);
         DrawerResizingController.resizeX(drawer, e, true);
         DrawerResizingController.repositionY(drawer, e);
@@ -7,11 +11,17 @@ export default class DrawerResizingController {
     }
 
     static top(drawer, e) {
+        if (drawer.getBoundingClientRect().top < '41' && e.clientY < '41') {
+            return;
+        }
         DrawerResizingController.resizeY(drawer, e, true)
         DrawerResizingController.repositionY(drawer, e);
     }
 
     static topRight(drawer, e) {
+        if (drawer.getBoundingClientRect().top < '41' && e.clientY < '41') {
+            return;
+        }
         DrawerResizingController.resizeX(drawer, e);
         DrawerResizingController.resizeY(drawer, e, true);
         DrawerResizingController.repositionY(drawer, e);
@@ -42,7 +52,6 @@ export default class DrawerResizingController {
     }
 
     static resizeX(drawer, e, reversible) {
-        console.log(drawer);
         const rect = drawer.getBoundingClientRect();
         if (reversible) {
             drawer.style.width = ((drawer.clientWidth) + (rect.left - (e.pageX))) + 'px';

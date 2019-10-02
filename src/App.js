@@ -1,7 +1,9 @@
 import React from 'react';
-import './App.css';
 import Drawer from './components/drawer/drawer';
+import './App.css';
 import DesktopBar from './components/desktopbar/desktopbar';
+import {connect} from 'react-redux';
+import SSHForm from './components/sshform/sshform';
 
 const styles = {
   app: {
@@ -10,14 +12,41 @@ const styles = {
   }
 }
 
-function App() {
-  return (
-    <div className="App" style={styles.app}>
-      <DesktopBar></DesktopBar>
-      <Drawer style={{top: 100, left: 100}} color="rgba(255, 0, 0, 0.5)"></Drawer>
-      <Drawer style={{top: 400, left: 400}} color="rgba(0, 255, 0, 0.5)"></Drawer>
-    </div>
-  );
+class App extends React.Component {
+
+  getActiveWindows = () => {
+    return this.props.drawers.filter((x) => x.active === true);
+  }
+
+  getInactiveWindows = () => {
+    return this.props.drawers.filter((x) => x.active === false);
+  }
+
+  renderActiveWindows = () => {
+    const activeWindows = this.getActiveWindows();
+    return activeWindows.map((x, index) => <Drawer key={index} id={x.id} style={x.style} color={x.color} active={x.active}></Drawer>)
+  }
+
+  render() {
+    return (
+      <div className="App" style={styles.app}>
+        <DesktopBar inactiveWindows={this.getInactiveWindows()}></DesktopBar>
+        {this.props.modalOpen?<SSHForm></SSHForm>:''}
+        <div>
+          {
+            this.renderActiveWindows()
+          }
+        </div>
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    drawers: state.drawers,
+    modalOpen: state.SSHModalOpen
+  }
+}
+
+export default connect(mapStateToProps)(App);
